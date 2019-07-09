@@ -22,6 +22,21 @@ import pickle
 # everytime the the app is started 
 # use pickle module to pickle a dictionary
 
+
+
+# your_data = {'foo': 'bar'}
+
+# # Store data (serialize)  do this on closing of window
+# with open('filename.pickle', 'wb') as handle:
+#     pickle.dump(database, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+# # Load data (deserialize) do this when 
+# with open('filename.pickle', 'rb') as handle:
+#     unserialized_data = pickle.load(handle)
+
+# print(your_data == unserialized_data)
+
+
 database = {}
 
 def init_store():
