@@ -1,4 +1,4 @@
-# Mini-Projects
+# Novice Python Projects
 
 Project 1:
  Alarm app
