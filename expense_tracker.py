@@ -1,30 +1,57 @@
+import matplotlib
+import pandas
+import PySimpleGUI
+from datetime import datetime
+import pickle
 
-import pandas 
-import matplotlib 
+# Create a simple database to store expenditure based on categories - can do a dictionary with key
+# being category and value being cumulative spendings. May need to define a function that creates a 
+# new dictionary for each month  
+
+# {amount, category, optional message, date}
+#entry boxes/ option list for each
+
+# main functions:
+
+# - log spendings
+# - store spendings details
+# - generate graphs 
 
 
-# code taken from documentation 
+# storage of spendings needs to be external to the script, otherwise it just gets refreshed 
+# everytime the the app is started 
+# use pickle module to pickle a dictionary
 
-import PySimpleGUI as sg
+database = {}
 
-layout = [[sg.Text('Expense Tracker', size=(30, 1), font=("Helvetica", 25), text_color='blue')],
-	[sg.Text('Here is some text.... and a place to enter text')],
-	[sg.InputText()],
-	[sg.Checkbox('My first checkbox!'), sg.Checkbox('My second checkbox!', default=True)],
-	[sg.Radio('My first Radio!     ', "RADIO1", default=True), sg.Radio('My second Radio!', "RADIO1")],
-	[sg.Multiline(default_text='This is the default Text shoulsd you decide not to type anything',)],
-[sg.InputCombo(['Combobox 1', 'Combobox 2'], size=(20, 3)),
-	sg.Slider(range=(1, 100), orientation='h', size=(35, 20), default_value=85)],
-[sg.Listbox(values=['Listbox 1', 'Listbox 2', 'Listbox 3'], size=(30, 6)),
-	sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=25),
-	sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=75),
-	sg.Slider(range=(1, 100), orientation='v', size=(10, 20), default_value=10)],
-[sg.Text('_'  * 100, size=(70, 1))],
-[sg.Text('Choose Source and Destination Folders', size=(35, 1))],
-[sg.Text('Source Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Source'),
-	sg.FolderBrowse()],
-[sg.Text('Destination Folder', size=(15, 1), auto_size_text=False, justification='right'), sg.InputText('Dest'),
-	sg.FolderBrowse()],
-[sg.Submit(), sg.Cancel(), sg.Button('Customized', button_color=('white', 'green'))]]
+def init_store():
+    """ initialise a monthly storage for expenditure. Keep track of year."""
+    month = datetime.now().month
+    year = datetime.now().year
+    database[(month, year)] = {}
+    return
 
-event, values  = sg.Window('Everything bagel', layout, auto_size_text=True, default_element_size=(40, 1)).Read()
+
+def log_spending(category, amount, date):
+    """ Log spending details into storage.
+    
+    Parameters:
+        category (str): the category of spending (e.g. food)
+        amount (float): the amount of money spent
+        date (tuple<str, str>): month and year of the purchase
+    """
+    if database.get(date).get(category):
+        init_amount = database.get(date).get(category)
+        database[date][category] = init_amount + amount
+
+
+def view_category_spendings():
+    """ View by category (histogram??) use matplotlib """
+    pass
+
+def view_monthly_spendings():
+    """ View total spendings by date (month) (line chart??) use matplotlib"""
+    pass
+
+init_store()
+log_spending("food")
