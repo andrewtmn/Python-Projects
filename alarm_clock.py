@@ -19,8 +19,8 @@ class AlarmClock():
         
         # Label showing the alarm time that was set by user
         self._time_set = tk.StringVar()
-        self._alarm_time = tk.Label(master, font=10, text="Set your alarm in minutes")
-        self._alarm_time.pack()
+        self._alarm_time = tk.Label(master, font=10, text="Set your alarm in minutes", relief=tk.RAISED)
+        self._alarm_time.pack(ipadx=5, ipady=5)
 
         # frame containing entry widget and reset/set buttons
         self._set_alarm_frame = tk.Frame(master)
@@ -55,7 +55,7 @@ class AlarmClock():
         try:
             mins = int(self._time_set.get())
             alarm_time = datetime.datetime.now() + datetime.timedelta(minutes=mins)
-            self._alarm_time.config(text="Alarm: " + str(alarm_time.ctime().__str__()))
+            self._alarm_time.config(text=str(alarm_time.ctime().__str__()))
         except: 
             self._alarm_time.config(text="That's not a valid value for minutes.")
             self._time_set.set(0)
@@ -67,8 +67,6 @@ class AlarmClock():
         if self._alarm_time["text"] == self._current_time:
             self.reset()
             messagebox.showinfo("Time is up", "Your alarm went off")
-            for i in range(3):
-                winsound.Beep(1000, 1000)
             
     
     def reset(self):

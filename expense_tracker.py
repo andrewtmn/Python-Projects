@@ -1,14 +1,14 @@
 import matplotlib
 import pandas
-import PySimpleGUI
 from datetime import datetime
 import pickle
+import tkinter as tk
 
 # Create a simple database to store expenditure based on categories - can do a dictionary with key
 # being category and value being cumulative spendings. May need to define a function that creates a 
 # new dictionary for each month  
 
-# {amount, category, optional message, date}
+# {amount, category, date}
 #entry boxes/ option list for each
 
 # main functions:
@@ -23,8 +23,7 @@ import pickle
 # use pickle module to pickle a dictionary
 
 
-
-# your_data = {'foo': 'bar'}
+# database = {}
 
 # # Store data (serialize)  do this on closing of window
 # with open('filename.pickle', 'wb') as handle:
@@ -35,9 +34,9 @@ import pickle
 #     unserialized_data = pickle.load(handle)
 
 # print(your_data == unserialized_data)
-
-
 database = {}
+
+CATEGORIES = ('food', 'entertainment', 'fitness', 'rent', 'technology',)
 
 def init_store():
     """ initialise a monthly storage for expenditure. Keep track of year."""
@@ -58,15 +57,28 @@ def log_spending(category, amount, date):
     if database.get(date).get(category):
         init_amount = database.get(date).get(category)
         database[date][category] = init_amount + amount
+    else:
+        database[date][category] = amount
 
 
 def view_category_spendings():
-    """ View by category (histogram??) use matplotlib """
+    """ View by category (histogram??) use matplotlib 
+    
+    Can either make it appear in root window or a pop-up window"""
     pass
 
 def view_monthly_spendings():
-    """ View total spendings by date (month) (line chart??) use matplotlib"""
+    """ View total spendings by date (month) (line chart??) use matplotlib
+    
+    can either make it appear in root window or a pop-up window"""
     pass
 
-init_store()
-log_spending("food")
+
+
+def main():
+    root = tk.Tk()
+    root.wm_title("Expense Tracker")
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
