@@ -26,18 +26,19 @@ from tkinter import DoubleVar
 
 # database = {}
 
-# # Store data (serialize)  do this on closing of window
-# with open('filename.pickle', 'wb') as handle:
-#     pickle.dump(database, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
 
 # # Load data (deserialize) do this when initalising an expense tracker
-# with open('filename.pickle', 'rb') as handle:
+# with open('expense_tracker.pickle', 'rb') as handle:
 #     unserialized_data = pickle.load(handle)
 
 # print(database == unserialized_data)
 database = {}
 
-CATEGORIES = ('food', 'entertainment', 'fitness', 'rent', 'technology',)
+#strucutre of database:  (dict<list:dict>)
+# {(date):{'food':0, 'shopping':0, etc.}, ...}
+
+CATEGORIES = ('food', 'entertainment', 'fitness', 'rent', 'transport', 'shopping')
 
 
 class ExpenseTracker(object):
@@ -48,7 +49,9 @@ class ExpenseTracker(object):
         """ Constructor of an expense tracker"""
         # self._store = data_store
         self._master = master
-        # 
+        
+        self._database = {}
+        self._load_database()
 
         # initialise variables for entry widgets
         self._food = DoubleVar()
@@ -67,6 +70,7 @@ class ExpenseTracker(object):
         transp_frame = tk.Frame(master)
 
 
+        # Headings for the app
         self._heading = tk.Label(master, text="Expense Tracker", font=11).pack(side=tk.TOP, expand=True)
         self._subheading = tk.Label(master, text="This is a very basic tracker for general expenditure")\
             .pack(side=tk.TOP, expand=True)
@@ -97,6 +101,9 @@ class ExpenseTracker(object):
         self._transport_entry = tk.Entry(transp_frame, textvariable=self._transport)\
             .pack(side=tk.LEFT, pady=10, padx=10, expand=True, fill=tk.X)
 
+        button = tk.Button(master, text="print_data", command=self.print_data).pack()
+        button2 = tk.Button(master, text="clear data", command=self.clear_database).pack()
+
         # pack containers into the master window
         food_frame.pack(side=tk.TOP)
         ent_frame.pack(side=tk.TOP)
@@ -110,13 +117,32 @@ class ExpenseTracker(object):
             .pack(pady=5, padx=5, ipadx=8, side=tk.TOP)
 
 
-    def init_store(self):
-        """ initialise a monthly storage for expenditure. Keep track of year."""
-        month = datetime.now().month
-        year = datetime.now().year
-        database[(month, year)] = {}
+# ------------------------------ DEBUGGING ---------------
+    def print_data(self):
+        """ This method is for debugging purposes only."""
+        print(self._database.items())
+        print(self._database.keys())
+        print(self._database.values())
         return
 
+    def clear_database(self):
+        """Deletes all memory stored on database dictionary"""
+        self._database = {}
+        return
+# --------------------------------------------------------
+
+
+    def _load_database(self):
+        """ Loads persistent storage containing information about expenditure."""
+        with open('expense_tracker.pickle', 'rb') as handle:
+            self._database = pickle.load(handle)
+
+    def save_on_close(self):
+        """ Stores (serialises) the dictionary database on closing of master window."""
+        with open('expense_tracker.pickle', 'wb') as handle:
+            pickle.dump(self._database, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        self._master.destroy()
+        return
 
     def log_spending(self):
         """ Log spending details into storage.
@@ -131,13 +157,19 @@ class ExpenseTracker(object):
         date = (month, year,)
 
         for category in CATEGORIES:
-            amount = getattr("_" + category).get()
-            if self._database.get(date).get(category):
-                init_amount = self._database.get(date).get(category)
-                self._database[date][category] = init_amount + amount
+            amount = getattr(self, "_" + category).get()
+            if self._database.get(date) is not None:
+                if self._database.get(date).get(category) is not None:
+                    init_amount = self._database.get(date).get(category)
+                    self._database[date][category] = init_amount + amount
+                else:
+                    self._database[date][category] = amount
             else:
+                self._database[date] = {}
                 self._database[date][category] = amount
 
+
+#might want to do a getter method that obtains the amount for each date
 
     def view_category_spendings(self):
         """ View by category (histogram??) use matplotlib 
@@ -158,6 +190,7 @@ def main():
     root.title("Expense Tracker")
     root.minsize(400,300)
     expense_tracker=ExpenseTracker(root)
+    root.protocol("WM_DELETE_WINDOW", expense_tracker.save_on_close)
     root.mainloop()
 
 if __name__ == "__main__":
