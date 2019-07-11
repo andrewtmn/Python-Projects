@@ -1,13 +1,22 @@
+
+# import graphing tools
 import matplotlib
+# from matplotlib import style
+# matplotlib.use("TkAgg")
+# from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+# from matplotlib.figure import Figure
+
 import pandas
+
 from datetime import datetime
+
 import pickle
+
 import tkinter as tk
+from tkinter import ttk
 from tkinter import DoubleVar
 
-# Create a simple database to store expenditure based on categories - can do a dictionary with key
-# being category and value being cumulative spendings. May need to define a function that creates a 
-# new dictionary for each month  
+# Create a simple database to store expenditure based on categories 
 
 # {amount, category, date}
 #entry boxes/ option list for each
@@ -15,40 +24,32 @@ from tkinter import DoubleVar
 # main functions:
 
 # - log spendings
-# - store spendings details
+# - store spendings details in dictionary
 # - generate graphs 
-
 
 # storage of spendings needs to be external to the script, otherwise it just gets refreshed 
 # everytime the the app is started 
 # use pickle module to pickle a dictionary
-
-
-# database = {}
-
-
-
-# # Load data (deserialize) do this when initalising an expense tracker
-# with open('expense_tracker.pickle', 'rb') as handle:
-#     unserialized_data = pickle.load(handle)
-
-# print(database == unserialized_data)
-database = {}
 
 #strucutre of database:  (dict<list:dict>)
 # {(date):{'food':0, 'shopping':0, etc.}, ...}
 
 CATEGORIES = ('food', 'entertainment', 'fitness', 'rent', 'transport', 'shopping')
 
+class Page(tk.Frame):
+    def __init__(self, *args, **kwargs):
+        tk.Frame.__init__(self, *args, **kwargs)
+    def show(self):
+        self.lift()
 
-class ExpenseTracker(object):
+
+class LogSpendings(Page):
     """ A basic gui of an expense tracker. Log categorised spendings and view time-based/categorised
         expenditure."""
 
-    def __init__(self, master):
+    def __init__(self, *args, **kwargs ):
         """ Constructor of an expense tracker"""
-        # self._store = data_store
-        self._master = master
+        Page.__init__(self, *args, **kwargs)
         
         self._database = {}
         self._load_database()
@@ -62,17 +63,17 @@ class ExpenseTracker(object):
         self._transport = DoubleVar()
 
         # create containers for each category
-        food_frame = tk.Frame(master)
-        ent_frame = tk.Frame(master)
-        fitness_frame = tk.Frame(master)
-        rent_frame = tk.Frame(master)
-        shop_frame = tk.Frame(master)
-        transp_frame = tk.Frame(master)
+        food_frame = tk.Frame(self)
+        ent_frame = tk.Frame(self)
+        fitness_frame = tk.Frame(self)
+        rent_frame = tk.Frame(self)
+        shop_frame = tk.Frame(self)
+        transp_frame = tk.Frame(self)
 
 
         # Headings for the app
-        self._heading = tk.Label(master, text="Expense Tracker", font=11).pack(side=tk.TOP, expand=True)
-        self._subheading = tk.Label(master, text="This is a very basic tracker for general expenditure")\
+        self._heading = tk.Label(self, text="Expense Tracker", font=11).pack(side=tk.TOP, expand=True)
+        self._subheading = tk.Label(self, text="This is a very basic tracker for general expenditure")\
             .pack(side=tk.TOP, expand=True)
 
        
@@ -101,8 +102,8 @@ class ExpenseTracker(object):
         self._transport_entry = tk.Entry(transp_frame, textvariable=self._transport)\
             .pack(side=tk.LEFT, pady=10, padx=10, expand=True, fill=tk.X)
 
-        button = tk.Button(master, text="print_data", command=self.print_data).pack()
-        button2 = tk.Button(master, text="clear data", command=self.clear_database).pack()
+        button = tk.Button(self, text="print_data", command=self.print_data).pack()
+        button2 = tk.Button(self, text="clear data", command=self.clear_database).pack()
 
         # pack containers into the master window
         food_frame.pack(side=tk.TOP)
@@ -113,7 +114,7 @@ class ExpenseTracker(object):
         transp_frame.pack(side=tk.TOP)
 
         # button to log entered spendings into the database
-        self._log = tk.Button(master, text="Log Spendings", command=self.log_spending)\
+        self._log = tk.Button(self, text="Log Spendings", command=self.log_spending)\
             .pack(pady=5, padx=5, ipadx=8, side=tk.TOP)
 
 
@@ -131,18 +132,15 @@ class ExpenseTracker(object):
         return
 # --------------------------------------------------------
 
-
     def _load_database(self):
         """ Loads persistent storage containing information about expenditure."""
         with open('expense_tracker.pickle', 'rb') as handle:
             self._database = pickle.load(handle)
-
-    def save_on_close(self):
-        """ Stores (serialises) the dictionary database on closing of master window."""
+    
+    def _save_database(self): # save log into persistent storage
         with open('expense_tracker.pickle', 'wb') as handle:
             pickle.dump(self._database, handle, protocol=pickle.HIGHEST_PROTOCOL)
-        self._master.destroy()
-        return
+
 
     def log_spending(self):
         """ Retrieves entered spendings and logs the values into storage."""
@@ -161,30 +159,96 @@ class ExpenseTracker(object):
             else:
                 self._database[date] = {}
                 self._database[date][category] = amount
+        
+        self._save_database()
+
+    def _save_log(self): # save log into persistent storage
+        with open('expense_tracker.pickle', 'wb') as handle:
+            pickle.dump(self._database, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 #might want to do a getter method that obtains the amount for each date
 
-    def view_category_spendings(self):
-        """ View by category (histogram??) use matplotlib 
+    # def view_category_spendings(self):
+    #     """ View by category (histogram??) use matplotlib 
 
-        Can either make it appear in root window or a pop-up window"""
-        pass
+    #     Can either make it appear in root window or a pop-up window"""
 
-    def view_monthly_spendings(self):
-        """ View total spendings by date (month) (line chart??) use matplotlib
+    #     back_btn = tk.Button(self._master, text="Back to Main Page")
+    #     pass
 
-        can either make it appear in root window or a pop-up window"""
-        pass
+    # def view_monthly_spendings(self):
+    #     """ View total spendings by date (month) (line chart??) use matplotlib
+
+    #     can either make it appear in root window or a pop-up window"""
+    #     back_btn = tk.Button(self._master, text="Back to Main Page")
+    #     pass
 
 
+class CategoryGraphs(Page):
+    def __init__(self, *args, **kwargs ):
+        """ Constructor of an expense tracker"""
+        Page.__init__(self, *args, **kwargs)
+        label = tk.Label(self, text="category").pack()
+
+class MonthlyGraphs(Page):
+    def __init__(self, *args, **kwargs ):
+        """ Constructor of an expense tracker"""
+        Page.__init__(self, *args, **kwargs)
+        label = tk.Label(self, text="monthly").pack()
+
+class Main(Page):
+    def __init__(self, *args, **kwargs ):
+        """ Constructor of an expense tracker"""
+        Page.__init__(self, *args, **kwargs)
+        welcome = tk.Label(self, text="Welcome to the Expense Tracker App!").pack(side=tk.TOP)
+        desc = tk.Label(self, text="Click on one of the buttons below to get started.").pack(side=tk.TOP)
+
+
+class MainView(tk.Frame):
+    """ Main view for user when application is run. Contains buttons that direct users to 
+    different pages of the application."""
+
+    def __init__(self, *args, **kwargs):
+        """ constructor """
+        tk.Frame.__init__(self, *args, **kwargs)
+        # create instances of the frames I want to toggle
+        main_page = Main(self)
+        log = LogSpendings(self)
+        category = CategoryGraphs(self)
+        monthly = MonthlyGraphs(self)
+
+        # # title and subheading for the main view of the app
+        # self._title = tk.Label(master, text="Expense Tracker App").pack()
+        # self._subheading = tk.Label(master, text="Store and view your spendings with this tracker app")\
+        #     .pack()
+
+        # create containers for the buttons and frames
+        buttonframe = tk.Frame(self)
+        container = tk.Frame(self)
+        buttonframe.pack(side=tk.TOP, fill=tk.X, expand=False)
+        container.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+        log.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
+        category.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
+        monthly.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
+
+        self._log_btn = tk.Button(self, text="Log your spendings", command=log.lift)\
+            .pack(side=tk.LEFT)
+        self._category_btn = tk.Button(self, text="View your categorical spendings", \
+            command=category.lift).pack(side=tk.LEFT)
+        self._month_btn = tk.Button(self, text="View your monthly spending", command=monthly.lift)\
+            .pack(side=tk.LEFT)
+        
+        main_page.show()
+    
 
 def main():
     root = tk.Tk()
     root.title("Expense Tracker")
-    root.minsize(400,300)
-    expense_tracker=ExpenseTracker(root)
-    root.protocol("WM_DELETE_WINDOW", expense_tracker.save_on_close)
+    root.minsize(450,500)
+    expense_tracker=MainView(root)
+    expense_tracker.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
     root.mainloop()
 
 if __name__ == "__main__":

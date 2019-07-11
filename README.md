@@ -8,7 +8,7 @@ Project 1:
 Project 2:
  Expense Tracker
   #TODO:
-  # fix dictionary method - doesn't create key-value pairs for all categories
+  # Fix up main page - the labels aren't showing for it
   # read about how to integrate matplotlib into tkinter
   
 
