@@ -162,10 +162,6 @@ class LogSpendings(Page):
         
         self._save_database()
 
-    def _save_log(self): # save log into persistent storage
-        with open('expense_tracker.pickle', 'wb') as handle:
-            pickle.dump(self._database, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
 
 #might want to do a getter method that obtains the amount for each date
 
