@@ -190,12 +190,14 @@ class CategoryGraphs(Page):
         """ Constructor of an expense tracker"""
         Page.__init__(self, *args, **kwargs)
         label = tk.Label(self, text="category").pack()
+        create_graph = tk.Button(self, text="Update Graph").pack()
 
 class MonthlyGraphs(Page):
     def __init__(self, *args, **kwargs ):
         """ Constructor of an expense tracker"""
         Page.__init__(self, *args, **kwargs)
         label = tk.Label(self, text="monthly").pack()
+        create_graph = tk.Button(self, text="Update Graph").pack()
 
 class Main(Page):
     def __init__(self, *args, **kwargs ):
