@@ -145,13 +145,7 @@ class ExpenseTracker(object):
         return
 
     def log_spending(self):
-        """ Log spending details into storage.
-
-        Parameters:
-            category (str): the category of spending (e.g. food)
-            amount (float): the amount of money spent
-            date (tuple<str, str>): month and year of the purchase
-        """
+        """ Retrieves entered spendings and logs the values into storage."""
         month = datetime.now().month
         year = datetime.now().year
         date = (month, year,)
