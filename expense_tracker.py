@@ -33,7 +33,7 @@ from PIL import Image, ImageTk
 # everytime the the app is started 
 # use pickle module to pickle a dictionary
 
-#strucutre of database:  (dict<list:dict>)
+#strucutre of database:  (dict<tuple:dict>)
 # {(date):{'food':0, 'shopping':0, etc.}, ...}
 
 CATEGORIES = ('food', 'entertainment', 'fitness', 'rent', 'transport', 'shopping')
@@ -203,24 +203,27 @@ class CategoryGraphs(Page):
     def __init__(self, *args, **kwargs ):
         """ Constructor of an expense tracker"""
         Page.__init__(self, *args, **kwargs)
-        label = tk.Label(self, text="category").pack()
-        create_graph = tk.Button(self, text="Update Graph").pack()
+        label = tk.Label(self, text="Spending Based On Category", font=12)\
+            .pack(expand=True, anchor=tk.N, pady=8)
+        create_graph = tk.Button(self, text="Update Graph").pack(expand=True, pady=5, anchor=tk.S)
 
 class MonthlyGraphs(Page):
     """ Page displaying line graph of total spendings per month"""
     def __init__(self, *args, **kwargs ):
         """ Constructor """
         Page.__init__(self, *args, **kwargs)
-        label = tk.Label(self, text="monthly").pack()
-        create_graph = tk.Button(self, text="Update Graph").pack()
+        label = tk.Label(self, text="Monthly Spendings (Histogram)", font=12)\
+            .pack(expand=True, anchor=tk.N, pady=8)
+        create_graph = tk.Button(self, text="Update Graph").pack(expand=True, pady=5, anchor=tk.S)
 
 class PieGraph(Page):
     """ Page representing pie chart of categorical spendings for the month."""
     def __init__(self, *args, **kwargs ):
         """ Constructor """
         Page.__init__(self, *args, **kwargs)
-        label = tk.Label(self, text="Monthly Spendings based on Category").pack()
-        create_graph = tk.Button(self, text="Update Chart").pack()
+        label = tk.Label(self, text="Monthly Spendings based on Category",font=12)\
+            .pack(expand=True, anchor=tk.N, pady=8)
+        create_graph = tk.Button(self, text="Update Chart").pack(expand=True, pady=5, anchor=tk.S)
 
 class Home(Page):
     """ Home page of application. """
