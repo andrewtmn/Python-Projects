@@ -199,8 +199,10 @@ class Main(Page):
     def __init__(self, *args, **kwargs ):
         """ Constructor of an expense tracker"""
         Page.__init__(self, *args, **kwargs)
-        welcome = tk.Label(self, text="Welcome to the Expense Tracker App!").pack(side=tk.TOP)
-        desc = tk.Label(self, text="Click on one of the buttons below to get started.").pack(side=tk.TOP)
+        welcome = tk.Label(self, text="Welcome to the Expense Tracker App!", font=12)\
+            .pack(side=tk.TOP, expand=True, fill=tk.BOTH)
+        desc = tk.Label(self, text="Click on one of the buttons below to get started.")\
+            .pack(side=tk.TOP, expand=True, fill=tk.BOTH)
 
 
 class MainView(tk.Frame):
@@ -227,6 +229,7 @@ class MainView(tk.Frame):
         buttonframe.pack(side=tk.TOP, fill=tk.X, expand=False)
         container.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
+        main_page.place(in_=container, x=0, relwidth=1, relheight=1)
         log.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
         category.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
         monthly.place(in_=container, x=0, y=0, relwidth=1, relheight=1)

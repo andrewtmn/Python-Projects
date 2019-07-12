@@ -8,8 +8,8 @@ Project 1:
 Project 2:
  Expense Tracker
   #TODO:
-  # Fix up main page - the labels aren't showing for it
-  # read about how to integrate matplotlib into tkinter
+  # add a picture to the main page
+  # read about how to integrate matplotlib into tkinter - histograms and line graphs
   
 
  
