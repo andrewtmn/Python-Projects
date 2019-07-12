@@ -37,6 +37,7 @@ from PIL import Image, ImageTk
 # {(date):{'food':0, 'shopping':0, etc.}, ...}
 
 CATEGORIES = ('food', 'entertainment', 'fitness', 'rent', 'transport', 'shopping')
+UPPER_CATEG = ('Food', 'Entertainment', 'Fitness', 'Rent', 'Transport', 'Shopping')
 
 class Page(tk.Frame):
     def __init__(self, *args, **kwargs):
@@ -55,7 +56,21 @@ class LogSpendings(Page):
         
         self._database = {}
         self._load_database()
+        self._init_vars()
+        self._init_frames()
+        self._init_headings()
+        self._init_labels()
+        self._init_entries()
+        button = tk.Button(self, text="print_data", command=self.print_data).pack(expand=True)
+        button2 = tk.Button(self, text="clear data", command=self.clear_database).pack(expand=True)
+        self._pack_frames()
+        
+        # button to log entered spendings into the database
+        self._log = tk.Button(self, text="Log Spendings", command=self.log_spending)\
+            .pack(pady=5, padx=5, ipadx=8, side=tk.TOP)
 
+    def _init_vars(self):
+        """ Initialise double variables for entry widgets"""
         # initialise variables for entry widgets
         self._food = DoubleVar()
         self._entertainment = DoubleVar()
@@ -63,60 +78,57 @@ class LogSpendings(Page):
         self._rent = DoubleVar()
         self._shopping = DoubleVar()
         self._transport = DoubleVar()
-
+    
+    def _init_frames(self):
+        """ Initialise frames for each spending category"""
         # create containers for each category
-        food_frame = tk.Frame(self)
-        ent_frame = tk.Frame(self)
-        fitness_frame = tk.Frame(self)
-        rent_frame = tk.Frame(self)
-        shop_frame = tk.Frame(self)
-        transp_frame = tk.Frame(self)
+        self._food_frame = tk.Frame(self)
+        self._ent_frame = tk.Frame(self)
+        self._fitness_frame = tk.Frame(self)
+        self._rent_frame = tk.Frame(self)
+        self._shop_frame = tk.Frame(self)
+        self._transp_frame = tk.Frame(self)
 
+    def _init_headings(self):
+        """ Initialise headings for the page"""
         # Headings for the app
         self._heading = tk.Label(self, text="Expense Tracker", font=11).pack(side=tk.TOP, expand=True)
         self._subheading = tk.Label(self, text="This is a very basic tracker for general expenditure")\
             .pack(side=tk.TOP, expand=True)
-       
-       # pack label and entry widgets into their corresponding frames/containers 
-        food_lbl = tk.Label(food_frame, text="Food").pack(side=tk.LEFT)
-        self._food_entry = tk.Entry(food_frame, textvariable=self._food)\
-            .pack(side=tk.LEFT, pady=10, padx=10, expand=True, fill=tk.X)
-
-        ent_lbl = tk.Label(ent_frame, text="Entertainment").pack(side=tk.LEFT)
-        self._entertainment_entry = tk.Entry(ent_frame, textvariable=self._entertainment)\
-            .pack(side=tk.LEFT, pady=10, padx=10, expand=True, fill=tk.X)
-
-        fitness_lbl = tk.Label(fitness_frame, text="Fitness").pack(side=tk.LEFT)
-        self._fitness_entry = tk.Entry(fitness_frame, textvariable=self._fitness)\
-            .pack(side=tk.LEFT, pady=10, padx=10, expand=True, fill=tk.X)
-        
-        rent_lbl = tk.Label(rent_frame, text="Rent").pack(side=tk.LEFT)
-        self._rent_entry = tk.Entry(rent_frame, textvariable=self._rent)\
-            .pack(side=tk.LEFT, pady=10, padx=10, expand=True, fill=tk.X)
- 
-        shop_lbl = tk.Label(shop_frame, text="Shopping").pack(side=tk.LEFT)
-        self._shopping_entry = tk.Entry(shop_frame, textvariable=self._shopping)\
-            .pack(side=tk.LEFT, pady=10, padx=10, expand=True, fill=tk.X)
-        
-        transp_lbl = tk.Label(transp_frame, text="Transport").pack(side=tk.LEFT)
-        self._transport_entry = tk.Entry(transp_frame, textvariable=self._transport)\
-            .pack(side=tk.LEFT, pady=10, padx=10, expand=True, fill=tk.X)
-
-        button = tk.Button(self, text="print_data", command=self.print_data).pack(expand=True)
-        button2 = tk.Button(self, text="clear data", command=self.clear_database).pack(expand=True)
-
+    
+    def _pack_frames(self):
+        """Pack frames into the page"""
         # pack containers into the master window
-        food_frame.pack(side=tk.TOP, expand=True)
-        ent_frame.pack(side=tk.TOP, expand=True)
-        fitness_frame.pack(side=tk.TOP, expand=True)
-        rent_frame.pack(side=tk.TOP, expand=True)
-        shop_frame.pack(side=tk.TOP, expand=True)
-        transp_frame.pack(side=tk.TOP, expand=True)
+        self._food_frame.pack(side=tk.TOP, expand=True)
+        self._ent_frame.pack(side=tk.TOP, expand=True)
+        self._fitness_frame.pack(side=tk.TOP, expand=True)
+        self._rent_frame.pack(side=tk.TOP, expand=True)
+        self._shop_frame.pack(side=tk.TOP, expand=True)
+        self._transp_frame.pack(side=tk.TOP, expand=True)
+    
+    def _init_labels(self):
+        """ Initialise labels for each category and pack"""
+        self._food_lbl = tk.Label(self._food_frame, text="Food").pack(side=tk.LEFT)
+        self._ent_lbl = tk.Label(self._ent_frame, text="Entertainment").pack(side=tk.LEFT)
+        self._fitness_lbl = tk.Label(self._fitness_frame, text="Fitness").pack(side=tk.LEFT)
+        self._rent_lbl = tk.Label(self._rent_frame, text="Rent").pack(side=tk.LEFT)
+        self._shop_lbl = tk.Label(self._shop_frame, text="Shopping").pack(side=tk.LEFT)
+        self._transp_lbl = tk.Label(self._transp_frame, text="Transport").pack(side=tk.LEFT)
 
-        # button to log entered spendings into the database
-        self._log = tk.Button(self, text="Log Spendings", command=self.log_spending)\
-            .pack(pady=5, padx=5, ipadx=8, side=tk.TOP)
-
+    def _init_entries(self):
+        """ Initialise entry widgets for each category and pack"""
+        self._food_entry = tk.Entry(self._food_frame, textvariable=self._food)\
+            .pack(side=tk.LEFT, pady=10, padx=10, expand=True, fill=tk.X)
+        self._entertainment_entry = tk.Entry(self._ent_frame, textvariable=self._entertainment)\
+            .pack(side=tk.LEFT, pady=10, padx=10, expand=True, fill=tk.X)        
+        self._fitness_entry = tk.Entry(self._fitness_frame, textvariable=self._fitness)\
+            .pack(side=tk.LEFT, pady=10, padx=10, expand=True, fill=tk.X)      
+        self._rent_entry = tk.Entry(self._rent_frame, textvariable=self._rent)\
+            .pack(side=tk.LEFT, pady=10, padx=10, expand=True, fill=tk.X)       
+        self._shopping_entry = tk.Entry(self._shop_frame, textvariable=self._shopping)\
+            .pack(side=tk.LEFT, pady=10, padx=10, expand=True, fill=tk.X)       
+        self._transport_entry = tk.Entry(self._transp_frame, textvariable=self._transport)\
+            .pack(side=tk.LEFT, pady=10, padx=10, expand=True, fill=tk.X)
 
 # ------------------------------ DEBUGGING ---------------
     def print_data(self):

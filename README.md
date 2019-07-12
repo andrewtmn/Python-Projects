@@ -8,7 +8,7 @@ Project 1:
 Project 2:
  Expense Tracker
   #TODO:
-  # add a picture to the main page
+  # align the entry widgets to make them look pretty - maybe add a picture to that page??
   # read about how to integrate matplotlib into tkinter - histograms and line graphs
   
 
