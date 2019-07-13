@@ -1,10 +1,10 @@
 
 # import graphing tools
 import matplotlib
-# from matplotlib import style
-# matplotlib.use("TkAgg")
-# from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
-# from matplotlib.figure import Figure
+from matplotlib import style
+matplotlib.use("TkAgg")
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 
 import pandas
 
@@ -211,6 +211,14 @@ class CategoryGraphs(Page):
         Page.__init__(self, *args, **kwargs)
         label = tk.Label(self, text="Spending Based On Category", font=12)\
             .pack(expand=True, anchor=tk.N, pady=8)
+
+        f = Figure(figsize=(5,5), dpi=100)
+        a= f.add_subplot(111)
+        a.plot([1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8])
+
+        canvas = FigureCanvasTkAgg(f, self)
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
         create_graph = tk.Button(self, text="Update Graph").pack(expand=True, pady=5, anchor=tk.S)
 
 class MonthlyGraphs(Page):
@@ -220,6 +228,14 @@ class MonthlyGraphs(Page):
         Page.__init__(self, *args, **kwargs)
         label = tk.Label(self, text="Monthly Spendings (Histogram)", font=12)\
             .pack(expand=True, anchor=tk.N, pady=8)
+
+        f = Figure(figsize=(5,5), dpi=100)
+        a= f.add_subplot(111)
+        a.plot([1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8])
+
+        canvas = FigureCanvasTkAgg(f, self)
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
         create_graph = tk.Button(self, text="Update Graph").pack(expand=True, pady=5, anchor=tk.S)
 
 class PieGraph(Page):
@@ -229,7 +245,16 @@ class PieGraph(Page):
         Page.__init__(self, *args, **kwargs)
         label = tk.Label(self, text="Monthly Spendings based on Category",font=12)\
             .pack(expand=True, anchor=tk.N, pady=8)
+
+        f = Figure(figsize=(5,5), dpi=100)
+        a= f.add_subplot(111)
+        a.plot([1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8])
+
+        canvas = FigureCanvasTkAgg(f, self)
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
         create_graph = tk.Button(self, text="Update Chart").pack(expand=True, pady=5, anchor=tk.S)
+
 
 class Home(Page):
     """ Home page of application. """
