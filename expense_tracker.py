@@ -6,10 +6,13 @@ matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
+# haven't used this yet - need to read about it
 import pandas
 
+# for logging dates and its spendings
 from datetime import datetime
 
+#for storing data on expenditure
 import pickle
 
 import tkinter as tk
@@ -281,39 +284,54 @@ class MainView(tk.Frame):
     def __init__(self, *args, **kwargs):
         """ constructor """
         tk.Frame.__init__(self, *args, **kwargs)
+
+        self._init_pages()
+        self._init_containers()
+        self._place_pages()
+        self._init_buttons()
+
+        # show the home page first
+        self._home.show()
+
+    def _init_pages(self):
+        """ Initialise 'pages' (tk.Frame) for the application """
         # create instances of the frames I want to toggle
-        home = Home(self)
-        log = LogSpendings(self)
-        category = CategoryGraphs(self)
-        monthly = MonthlyGraphs(self)
-        pie = PieGraph(self)
+        self._home = Home(self)
+        self._log = LogSpendings(self)
+        self._category = CategoryGraphs(self)
+        self._monthly = MonthlyGraphs(self)
+        self._pie = PieGraph(self)
 
+    def _init_containers(self):
+        """ Initialise the containers for buttons and pages."""
         # create containers for the buttons and frames
-        buttonframe = tk.Frame(self)
-        container = tk.Frame(self)
-        buttonframe.pack(side=tk.TOP, fill=tk.X, expand=False)
-        container.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self._buttonframe = tk.Frame(self)
+        self._container = tk.Frame(self)
+        self._buttonframe.pack(side=tk.TOP, fill=tk.X, expand=False)
+        self._container.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
+    def _place_pages(self):
+        """ Place the 'pages' into the container."""
         # place each 'page'/frame into the container
-        home.place(in_=container, x=0, relwidth=1, relheight=1)
-        log.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
-        category.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
-        monthly.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
-        pie.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
+        self._home.place(in_=self._container, x=0, relwidth=1, relheight=1)
+        self._log.place(in_=self._container, x=0, y=0, relwidth=1, relheight=1)
+        self._category.place(in_=self._container, x=0, y=0, relwidth=1, relheight=1)
+        self._monthly.place(in_=self._container, x=0, y=0, relwidth=1, relheight=1)
+        self._pie.place(in_=self._container, x=0, y=0, relwidth=1, relheight=1)
 
+    def _init_buttons(self):
+        """ Initialise buttons to toggle to different pages."""
         # buttons to toggle to the different pages
-        self._log_btn = tk.Button(self, text="Log spendings", command=log.lift)\
+        self._log_btn = tk.Button(self, text="Log spendings", command=self._log.lift)\
             .pack(side=tk.LEFT, padx=5, pady=5, expand=True)
         self._category_btn = tk.Button(self, text="View category spending", \
-            command=category.lift).pack(side=tk.LEFT, padx=5, pady=5, expand=True)
-        self._month_btn = tk.Button(self, text="View monthly spending", command=monthly.lift)\
+            command=self._category.lift).pack(side=tk.LEFT, padx=5, pady=5, expand=True)
+        self._month_btn = tk.Button(self, text="View monthly spending", command=self._monthly.lift)\
             .pack(side=tk.LEFT, padx=5, pady=5, expand=True)
-        self._pie_btn = tk.Button(self, text="View Pie Chart", command=pie.lift)\
+        self._pie_btn = tk.Button(self, text="View Pie Chart", command=self._pie.lift)\
             .pack(side=tk.LEFT, padx=5, pady=5, expand=True)
-        
-        # show the home page first
-        home.show()
     
+
 
 def main():
     root = tk.Tk()
