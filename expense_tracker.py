@@ -30,7 +30,7 @@ from PIL import Image, ImageTk
 
 # - log spendings
 # - store spendings details in dictionary
-# - generate graphs 
+# - generate graphs and update them
 
 # storage of spendings needs to be external to the script, otherwise it just gets refreshed 
 # everytime the the app is started 
@@ -45,8 +45,19 @@ UPPER_CATEG = ('Food', 'Entertainment', 'Fitness', 'Rent', 'Transport', 'Shoppin
 class Page(tk.Frame):
     def __init__(self, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
+
+        # Every page inherits the pickled dictionary
+        self._database = {}
+        self._load_database()
+
     def show(self):
         self.lift()
+
+    # Every page has the dictionary loaded as an instance of itself
+    def _load_database(self):
+        """ Loads persistent storage containing information about expenditure."""
+        with open('expense_tracker.pickle', 'rb') as handle:
+            self._database = pickle.load(handle)
 
 
 class LogSpendings(Page):
@@ -57,8 +68,6 @@ class LogSpendings(Page):
         """ Constructor """
         Page.__init__(self, *args, **kwargs)
         
-        self._database = {}
-        self._load_database()
         self._init_vars()
         self._init_frames()
         self._init_headings()
@@ -81,6 +90,7 @@ class LogSpendings(Page):
         self._rent = DoubleVar()
         self._shopping = DoubleVar()
         self._transport = DoubleVar()
+        return
     
     def _init_frames(self):
         """ Initialise frames for each spending category"""
@@ -91,6 +101,7 @@ class LogSpendings(Page):
         self._rent_frame = tk.Frame(self)
         self._shop_frame = tk.Frame(self)
         self._transp_frame = tk.Frame(self)
+        return
 
     def _init_headings(self):
         """ Initialise headings for the page"""
@@ -98,9 +109,10 @@ class LogSpendings(Page):
         self._heading = tk.Label(self, text="Expense Tracker", font=11).pack(side=tk.TOP, expand=True)
         self._subheading = tk.Label(self, text="Enter your spendings and press 'Log Spendings'")\
             .pack(side=tk.TOP, expand=True)
+        return
     
     def _pack_frames(self):
-        """Pack frames into the page"""
+        """Pack frames (vertically stacked) into the page"""
         # pack containers into the master window
         self._food_frame.pack(side=tk.TOP, expand=True, fill=tk.X, padx=10)
         self._ent_frame.pack(side=tk.TOP, expand=True, fill=tk.X, padx=10)
@@ -108,7 +120,8 @@ class LogSpendings(Page):
         self._rent_frame.pack(side=tk.TOP, expand=True, fill=tk.X, padx=10)
         self._shop_frame.pack(side=tk.TOP, expand=True, fill=tk.X, padx=10)
         self._transp_frame.pack(side=tk.TOP, expand=True, fill=tk.X, padx=10)
-    
+        return
+
     def _init_labels(self):
         """ Initialise labels for each category and pack"""
         self._food_lbl = tk.Label(self._food_frame, text="Food")\
@@ -123,6 +136,7 @@ class LogSpendings(Page):
             .pack(side=tk.LEFT, ipadx=16, padx=5, expand=True, anchor=tk.E)
         self._transp_lbl = tk.Label(self._transp_frame, text="Transport")\
             .pack(side=tk.LEFT, ipadx=16, padx=5, expand=True, anchor=tk.E)
+        return
 
     def _init_entries(self):
         """ Initialise entry widgets for each category and pack"""
@@ -138,6 +152,7 @@ class LogSpendings(Page):
             .pack(side=tk.RIGHT, pady=10, padx=10, expand=True, anchor=tk.W)       
         self._transport_entry = tk.Entry(self._transp_frame, textvariable=self._transport)\
             .pack(side=tk.RIGHT, pady=10, padx=10, expand=True, anchor=tk.W)
+        return
 
 # ------------------------------ DEBUGGING ---------------
     def print_data(self):
@@ -152,16 +167,12 @@ class LogSpendings(Page):
         self._database = {}
         return
 # --------------------------------------------------------
-
-    def _load_database(self):
-        """ Loads persistent storage containing information about expenditure."""
-        with open('expense_tracker.pickle', 'rb') as handle:
-            self._database = pickle.load(handle)
     
     def _save_database(self): # save log into persistent storage
         """ Saves current data on self._database to pickle file"""
         with open('expense_tracker.pickle', 'wb') as handle:
             pickle.dump(self._database, handle, protocol=pickle.HIGHEST_PROTOCOL)
+        return
 
 
     def log_spending(self):
@@ -187,6 +198,7 @@ class LogSpendings(Page):
         print("Successfully saved log!")
         
         self._save_database()
+        return
 
 
 #might want to do a getter method that obtains the amount for each date
@@ -224,6 +236,8 @@ class CategoryGraphs(Page):
 
         create_graph = tk.Button(self, text="Update Graph").pack(expand=True, pady=5, anchor=tk.S)
 
+
+
 class MonthlyGraphs(Page):
     """ Page displaying line graph of total spendings per month"""
     def __init__(self, *args, **kwargs ):
@@ -232,14 +246,46 @@ class MonthlyGraphs(Page):
         label = tk.Label(self, text="Monthly Spendings (Histogram)", font=12)\
             .pack(expand=True, anchor=tk.N, pady=8)
 
-        f = Figure(figsize=(5,5), dpi=100)
-        a= f.add_subplot(111)
-        a.plot([1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8])
+        self._monthly_values = []
+        self._months = []
+        self._init_graph()
 
-        canvas = FigureCanvasTkAgg(f, self)
-        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        create_graph = tk.Button(self, text="Update Graph", command=self._update_graph)\
+            .pack(expand=True, pady=5, anchor=tk.S)
 
-        create_graph = tk.Button(self, text="Update Graph").pack(expand=True, pady=5, anchor=tk.S)
+    def _init_graph(self):
+        """ Updates the graph values to the current data stored in the dictionary. """
+        # create figure and add subplot
+        self._f = Figure(figsize=(3,3), dpi=100)
+        self._a = self._f.add_subplot(111)
+
+        self._update_plot_pts()
+        self._a.plot(self._months, self._monthly_values, marker='o')
+
+        self._canvas = FigureCanvasTkAgg(self._f, self)
+        self._canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        return
+    
+    def _update_graph(self):
+        """ Updates the set of points to plot and plots them on the figure """
+        self._update_plot_pts()
+        self._a.clear()
+        self._a.plot(self._months, self._monthly_values, marker='o')
+        return
+
+    def _update_plot_pts(self):
+        """ Retrieves current year's months and monthly spendings and stores them in lists."""
+        curr_year = datetime.now().year
+        self._monthly_values = []
+        self._months = []
+
+        for i in range(1, 13):
+            if self._database.get((i, curr_year,)) is not None:
+                self._monthly_values.append(sum(self._database.get((i, curr_year,)).values()))
+                self._months.append(i)
+        return
+
+
 
 class PieGraph(Page):
     """ Page displaying pie chart of categorical spendings for the current month."""
@@ -250,13 +296,15 @@ class PieGraph(Page):
             .pack(expand=True, anchor=tk.N, pady=8)
 
         f = Figure(figsize=(5,5), dpi=100)
-        a= f.add_subplot(111)
+        a = f.add_subplot(111)
         a.plot([1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8])
 
         canvas = FigureCanvasTkAgg(f, self)
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
         create_graph = tk.Button(self, text="Update Chart").pack(expand=True, pady=5, anchor=tk.S)
+
+
 
 
 class Home(Page):
@@ -275,6 +323,8 @@ class Home(Page):
 
         desc = tk.Label(self, text="Click on one of the buttons below to get started.")\
             .pack(side=tk.TOP, expand=True, fill=tk.BOTH)
+
+
 
 
 class MainView(tk.Frame):
@@ -301,6 +351,7 @@ class MainView(tk.Frame):
         self._category = CategoryGraphs(self)
         self._monthly = MonthlyGraphs(self)
         self._pie = PieGraph(self)
+        return
 
     def _init_containers(self):
         """ Initialise the containers for buttons and pages."""
@@ -309,6 +360,7 @@ class MainView(tk.Frame):
         self._container = tk.Frame(self)
         self._buttonframe.pack(side=tk.TOP, fill=tk.X, expand=False)
         self._container.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        return
 
     def _place_pages(self):
         """ Place the 'pages' into the container."""
@@ -318,6 +370,7 @@ class MainView(tk.Frame):
         self._category.place(in_=self._container, x=0, y=0, relwidth=1, relheight=1)
         self._monthly.place(in_=self._container, x=0, y=0, relwidth=1, relheight=1)
         self._pie.place(in_=self._container, x=0, y=0, relwidth=1, relheight=1)
+        return
 
     def _init_buttons(self):
         """ Initialise buttons to toggle to different pages."""
@@ -330,6 +383,7 @@ class MainView(tk.Frame):
             .pack(side=tk.LEFT, padx=5, pady=5, expand=True)
         self._pie_btn = tk.Button(self, text="View Pie Chart", command=self._pie.lift)\
             .pack(side=tk.LEFT, padx=5, pady=5, expand=True)
+        return
     
 
 
