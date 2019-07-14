@@ -5,6 +5,7 @@ from matplotlib import style
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
+import numpy as np 
 
 # haven't used this yet - need to read about it
 import pandas
@@ -236,7 +237,9 @@ class CategoryGraphs(Page):
 
         create_graph = tk.Button(self, text="Update Graph").pack(expand=True, pady=5, anchor=tk.S)
 
-
+    def _update_category_values(self):
+        (month, year,) = (datetime.now().month, datetime.now().year,)
+        
 
 class MonthlyGraphs(Page):
     """ Page displaying line graph of total spendings per month"""
