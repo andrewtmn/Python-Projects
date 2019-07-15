@@ -227,6 +227,7 @@ class CategoryGraphs(Page):
         Page.__init__(self, *args, **kwargs)
         label = tk.Label(self, text="Spending Based On Category", font=12)\
             .pack(expand=True, anchor=tk.N, pady=8)
+        self._categ = {}
 
         f = Figure(figsize=(5,5), dpi=100)
         a= f.add_subplot(111)
@@ -236,6 +237,7 @@ class CategoryGraphs(Page):
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
         create_graph = tk.Button(self, text="Update Graph").pack(expand=True, pady=5, anchor=tk.S)
+        return
 
     def _update_category_values(self):
         """ Retrieves current values for the month's categorical spendings."""
@@ -243,7 +245,8 @@ class CategoryGraphs(Page):
         if self._database.get((month, year,)) is None:
             return
         for category in CATEGORIES:
-            pass
+            self._categ[category] = self._database.get(category, 0)
+        return
 
 
         
