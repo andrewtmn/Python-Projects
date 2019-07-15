@@ -238,7 +238,14 @@ class CategoryGraphs(Page):
         create_graph = tk.Button(self, text="Update Graph").pack(expand=True, pady=5, anchor=tk.S)
 
     def _update_category_values(self):
+        """ Retrieves current values for the month's categorical spendings."""
         (month, year,) = (datetime.now().month, datetime.now().year,)
+        if self._database.get((month, year,)) is None:
+            return
+        for category in CATEGORIES:
+            pass
+
+
         
 
 class MonthlyGraphs(Page):
@@ -255,6 +262,7 @@ class MonthlyGraphs(Page):
 
         create_graph = tk.Button(self, text="Update Graph", command=self._update_graph)\
             .pack(expand=True, pady=5, anchor=tk.S)
+        return
 
     def _init_graph(self):
         """ Updates the graph values to the current data stored in the dictionary. """
@@ -306,7 +314,7 @@ class PieGraph(Page):
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
         create_graph = tk.Button(self, text="Update Chart").pack(expand=True, pady=5, anchor=tk.S)
-
+        return
 
 
 
@@ -326,6 +334,7 @@ class Home(Page):
 
         desc = tk.Label(self, text="Click on one of the buttons below to get started.")\
             .pack(side=tk.TOP, expand=True, fill=tk.BOTH)
+        return
 
 
 
@@ -345,6 +354,7 @@ class MainView(tk.Frame):
 
         # show the home page first
         self._home.show()
+        return
 
     def _init_pages(self):
         """ Initialise 'pages' (tk.Frame) for the application """
@@ -388,6 +398,8 @@ class MainView(tk.Frame):
             .pack(side=tk.LEFT, padx=5, pady=5, expand=True)
         return
     
+
+
 
 
 def main():
