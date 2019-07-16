@@ -6,6 +6,7 @@ matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import numpy as np 
+import matplotlib.pyplot as plt
 
 # haven't used this yet - need to read about it
 import pandas
@@ -221,31 +222,56 @@ class LogSpendings(Page):
 
 
 class CategoryGraphs(Page):
-    """ Page displaying current month's categorical spendings. """
+    """ Page displaying current month's categorical spendings as a histogram. """
     def __init__(self, *args, **kwargs ):
         """ Constructor of an expense tracker"""
         Page.__init__(self, *args, **kwargs)
-        label = tk.Label(self, text="Spending Based On Category", font=12)\
+        heading = tk.Label(self, text="Spending Based On Category", font=12)\
             .pack(expand=True, anchor=tk.N, pady=8)
         self._categ = {}
 
-        f = Figure(figsize=(5,5), dpi=100)
-        a= f.add_subplot(111)
-        a.plot([1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8])
+        self._init_graph()
 
-        canvas = FigureCanvasTkAgg(f, self)
-        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-
-        create_graph = tk.Button(self, text="Update Graph").pack(expand=True, pady=5, anchor=tk.S)
+        update_graph_btn = tk.Button(self, text="Update Graph", command=self._update_graph)\
+            .pack(expand=True, pady=5, anchor=tk.S)
         return
 
     def _update_category_values(self):
         """ Retrieves current values for the month's categorical spendings."""
+        # update the spendings values for each category
         (month, year,) = (datetime.now().month, datetime.now().year,)
         if self._database.get((month, year,)) is None:
             return
         for category in CATEGORIES:
             self._categ[category] = self._database.get(category, 0)
+
+        # update the data points for the bar graph
+        self._data = []
+        for category in CATEGORIES:
+            self._data.append(self._categ.get(category, 0))
+        return
+
+    def _update_graph(self):
+        """ Update subplot of bar graph on page. """
+        self._update_category_values()
+        self._a.clear()
+        self._a.bar(self._rang, self._data, 0.5)
+        print("updated!")
+        return
+
+    def _init_graph(self):
+        """ Initialise the bar graph using matplotlib and tkinter module. """
+        # Create a figure and add a subplot to the figure
+        self._f = Figure(figsize=(3, 3), dpi=100)
+        self._a = self._f.add_subplot(111)
+        self._rang = np.arange(1,7)
+
+        self._update_category_values()
+
+        # create a bar graph and add it tkinter canvas to be packed.
+        self._a.bar(self._rang, self._data, 0.5)
+        self._canvas = FigureCanvasTkAgg(self._f, self)
+        self._canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
         return
 
 
@@ -401,8 +427,6 @@ class MainView(tk.Frame):
             .pack(side=tk.LEFT, padx=5, pady=5, expand=True)
         return
     
-
-
 
 
 def main():
