@@ -222,7 +222,7 @@ class LogSpendings(Page):
 
 
 class CategoryGraphs(Page):
-    """ Page displaying current month's categorical spendings as a histogram. """
+    """ Page displaying current month's categorical spendings as a bar graph. """
     def __init__(self, *args, **kwargs ):
         """ Constructor of an expense tracker"""
         Page.__init__(self, *args, **kwargs)
@@ -334,16 +334,37 @@ class PieGraph(Page):
         Page.__init__(self, *args, **kwargs)
         label = tk.Label(self, text="Monthly Spendings based on Category",font=12)\
             .pack(expand=True, anchor=tk.N, pady=8)
+        
+        self._percentages = []
+        self._update_percentages()
 
-        f = Figure(figsize=(5,5), dpi=100)
-        a = f.add_subplot(111)
-        a.plot([1,2,3,4,5,6,7,8], [1,2,3,4,5,6,7,8])
+        self._f = Figure(figsize=(3,3), dpi=100)
+        self._a = self._f.add_subplot(111)
+        self._a.pie(self._percentages)
+        self._a.legend(CATEGORIES)
 
-        canvas = FigureCanvasTkAgg(f, self)
+        canvas = FigureCanvasTkAgg(self._f, self)
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-        create_graph = tk.Button(self, text="Update Chart").pack(expand=True, pady=5, anchor=tk.S)
+        create_graph = tk.Button(self, text="Update Chart", command=self._update_pie)\
+            .pack(expand=True, pady=5, anchor=tk.S)
         return
+
+    def _update_percentages(self):
+        values = [self._database.get(category, 0) for category in CATEGORIES]
+        total = sum(values)
+        if total == 0:
+            return "you haven't spent any money this month!"
+        self._percentages = [value*100/total for value in values]
+        return 
+
+    def _update_pie(self):
+        self._update_percentages()
+        self._a.clear
+        self._a.pie(self._percentages)
+        self._a.legend(CATEGORIES)
+
+    
 
 
 
