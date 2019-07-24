@@ -351,6 +351,7 @@ class PieGraph(Page):
         return
 
     def _update_percentages(self):
+        """ updates percentages of categorical spendings for the current month."""
         values = [self._database.get(category, 0) for category in CATEGORIES]
         total = sum(values)
         if total == 0:
@@ -359,6 +360,7 @@ class PieGraph(Page):
         return 
 
     def _update_pie(self):
+        """ Updates the pie graph in the page. """
         self._update_percentages()
         self._a.clear
         self._a.pie(self._percentages)
