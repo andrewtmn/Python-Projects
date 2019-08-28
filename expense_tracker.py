@@ -241,7 +241,7 @@ class CategoryGraphs(Page):
         # update the spendings values for each category
         (month, year,) = (datetime.now().month, datetime.now().year,)
         if self._database.get((month, year,)) is None:
-            return
+            self._database[(month, year,)] = {}
         for category in CATEGORIES:
             self._categ[category] = self._database.get(category, 0)
 
