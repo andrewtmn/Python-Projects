@@ -1,4 +1,6 @@
 # example use of pickle - taken off stack overflow
+# pickled files are used as a mini-database 
+# use dictionaries to store my data
 
 import pickle
 
