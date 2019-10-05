@@ -5,10 +5,10 @@
  - simple alarm app based on real time
  
   TODO: 
-  format the frames and widgets to look aesthetic
+  - format the frames and widgets to look aesthetic
   
   IMPROVEMENTS: 
-  deal with datetime format instead of just minutes
+  - deal with datetime format instead of just minutes
 
 ### Project 2:
  #### Expense Tracker
