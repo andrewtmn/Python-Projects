@@ -220,7 +220,7 @@ class LogSpendings(Page):
     #     back_btn = tk.Button(self._master, text="Back to Main Page")
     #     pass
 
-
+# need to use category names instead of numbers for the bar chart
 class CategoryGraphs(Page):
     """ Page displaying current month's categorical spendings as a bar graph. """
     def __init__(self, *args, **kwargs ):
