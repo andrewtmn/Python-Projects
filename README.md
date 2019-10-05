@@ -1,17 +1,17 @@
-# Novice Python Projects
+## Python Projects
 
-# Project 1:
- Alarm app
+### Project 1:
+#### Alarm app
  - simple alarm app based on real time
  
   TODO: 
-  format the frames and widgets to look aesthetic
+  - format the frames and widgets to look aesthetic
   
   IMPROVEMENTS: 
-  deal with datetime format instead of just minutes
+  - deal with datetime format instead of just minutes
 
-# Project 2:
- Expense Tracker
+### Project 2:
+ #### Expense Tracker
  - simple expense tracker, logging spendings for several categories of spending 
  - displays a line graph of total monthly spendings over a one year period
  - displays a bar graph of categorical spendings for the current month
