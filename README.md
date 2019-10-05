@@ -1,7 +1,7 @@
 ## Python Projects
 
 ### Project 1:
-##### Alarm app
+#### Alarm app
  - simple alarm app based on real time
  
   TODO: 
@@ -11,7 +11,7 @@
   deal with datetime format instead of just minutes
 
 ### Project 2:
- ##### Expense Tracker
+ #### Expense Tracker
  - simple expense tracker, logging spendings for several categories of spending 
  - displays a line graph of total monthly spendings over a one year period
  - displays a bar graph of categorical spendings for the current month
