@@ -58,7 +58,7 @@ class Page(tk.Frame):
     # Every page has the dictionary loaded as an instance of itself
     def _load_database(self):
         """ Loads persistent storage containing information about expenditure."""
-        with open('expense_tracker.pickle', 'rb') as handle:
+        with open('Expense_Tracker/expense_tracker.pickle', 'rb') as handle:
             self._database = pickle.load(handle)
 
 
@@ -172,7 +172,7 @@ class LogSpendings(Page):
     
     def _save_database(self): # save log into persistent storage
         """ Saves current data on self._database to pickle file"""
-        with open('expense_tracker.pickle', 'wb') as handle:
+        with open('Expense_Tracker/expense_tracker.pickle', 'wb') as handle:
             pickle.dump(self._database, handle, protocol=pickle.HIGHEST_PROTOCOL)
         return
 
@@ -378,7 +378,7 @@ class Home(Page):
         welcome = tk.Label(self, text="Welcome to the Expense Tracker App!", font=12)\
             .pack(side=tk.TOP, expand=True, fill=tk.BOTH)
 
-        load = Image.open("analytics-icon.png")
+        load = Image.open("Expense_Tracker/Icons/analytics-icon.png")
         render = ImageTk.PhotoImage(load)
         img = tk.Label(self, image=render)
         img.image = render
