@@ -45,6 +45,10 @@ CATEGORIES = ('food', 'entertainment', 'fitness', 'rent', 'transport', 'shopping
 UPPER_CATEG = ('Food', 'Entertainment', 'Fitness', 'Rent', 'Transport', 'Shopping')
 
 class Page(tk.Frame):
+"""
+Class that represents a page in the expense tracker app. Pages can be toggled to be 
+hidden and shown and only one page can be displayed in the window.
+"""
     def __init__(self, *args, **kwargs):
         tk.Frame.__init__(self, *args, **kwargs)
 
