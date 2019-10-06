@@ -34,22 +34,25 @@ from PIL import Image, ImageTk
 # - store spendings details in dictionary
 # - generate graphs and update them
 
-# storage of spendings needs to be external to the script, otherwise it just gets refreshed 
-# everytime the the app is started 
+# storage of spendings needs to be external to the script, otherwise it just 
+# gets refreshed everytime the the app is started 
 # use pickle module to pickle a dictionary
 
 #strucutre of database:  (dict<tuple:dict>)
 # {(date):{'food':0, 'shopping':0, etc.}, ...}
 
-CATEGORIES = ('food', 'entertainment', 'fitness', 'rent', 'transport', 'shopping')
-UPPER_CATEG = ('Food', 'Entertainment', 'Fitness', 'Rent', 'Transport', 'Shopping')
+CATEGORIES = ('food', 'entertainment', 'fitness', 'rent', 'transport', 
+    'shopping')
+UPPER_CATEG = ('Food', 'Entertainment', 'Fitness', 'Rent', 'Transport',
+     'Shopping')
 
 class Page(tk.Frame):
-"""
-Class that represents a page in the expense tracker app. Pages can be toggled to be 
-hidden and shown and only one page can be displayed in the window.
-"""
+    """ Class that represents a page in the expense tracker app. Pages can be
+        toggled to be hidden and shown and only one page can be displayed in the
+        window.
+    """
     def __init__(self, *args, **kwargs):
+        """ Cosntructor """
         tk.Frame.__init__(self, *args, **kwargs)
 
         # Every page inherits the pickled dictionary
@@ -57,6 +60,7 @@ hidden and shown and only one page can be displayed in the window.
         self._load_database()
 
     def show(self):
+        """ Shows the current page. """
         self.lift()
 
     # Every page has the dictionary loaded as an instance of itself
@@ -67,8 +71,9 @@ hidden and shown and only one page can be displayed in the window.
 
 
 class LogSpendings(Page):
-    """ Page providing ability for user to log spendings into the persistent storage. Spendings are
-    stored by the month in a dictionary."""
+    """ Page providing ability for user to log spendings into the persistent 
+        storage. Spendings are stored by the month in a dictionary.
+    """
 
     def __init__(self, *args, **kwargs ):
         """ Constructor """
@@ -79,12 +84,15 @@ class LogSpendings(Page):
         self._init_headings()
         self._init_labels()
         self._init_entries()
-        button = tk.Button(self, text="print_data", command=self.print_data).pack(expand=True)
-        button2 = tk.Button(self, text="clear data", command=self.clear_database).pack(expand=True)
+        button = tk.Button(self, text="print_data", \
+             command=self.print_data).pack(expand=True)
+        button2 = tk.Button(self, text="clear data", \
+            command=self.clear_database).pack(expand=True)
         self._pack_frames()
         
         # button to log entered spendings into the database
-        self._log = tk.Button(self, text="Log Spendings", command=self.log_spending)\
+        self._log = tk.Button(self, text="Log Spendings", \
+            command=self.log_spending)\
             .pack(pady=5, padx=5, ipadx=8, side=tk.TOP)
 
     def _init_vars(self):
@@ -112,8 +120,10 @@ class LogSpendings(Page):
     def _init_headings(self):
         """ Initialise headings for the page"""
         # Headings for the app
-        self._heading = tk.Label(self, text="Expense Tracker", font=11).pack(side=tk.TOP, expand=True)
-        self._subheading = tk.Label(self, text="Enter your spendings and press 'Log Spendings'")\
+        self._heading = tk.Label(self, text="Expense Tracker", font=11)\
+            .pack(side=tk.TOP, expand=True)
+        self._subheading = tk.Label(self, \
+            text="Enter your spendings and press 'Log Spendings'")\
             .pack(side=tk.TOP, expand=True)
         return
     
@@ -148,15 +158,24 @@ class LogSpendings(Page):
         """ Initialise entry widgets for each category and pack"""
         self._food_entry = tk.Entry(self._food_frame, textvariable=self._food)\
             .pack(side=tk.RIGHT, pady=10, padx=10, expand=True, anchor=tk.W)
-        self._entertainment_entry = tk.Entry(self._ent_frame, textvariable=self._entertainment)\
-            .pack(side=tk.RIGHT, pady=10, padx=10, expand=True, anchor=tk.W)        
-        self._fitness_entry = tk.Entry(self._fitness_frame, textvariable=self._fitness)\
-            .pack(side=tk.RIGHT, pady=10, padx=10, expand=True, anchor=tk.W)      
+
+        self._entertainment_entry = tk.Entry(self._ent_frame, \
+             textvariable=self._entertainment)\
+            .pack(side=tk.RIGHT, pady=10, padx=10, expand=True, anchor=tk.W)
+
+        self._fitness_entry = tk.Entry(self._fitness_frame, \
+             textvariable=self._fitness)\
+            .pack(side=tk.RIGHT, pady=10, padx=10, expand=True, anchor=tk.W)  
+
         self._rent_entry = tk.Entry(self._rent_frame, textvariable=self._rent)\
-            .pack(side=tk.RIGHT, pady=10, padx=10, expand=True, anchor=tk.W)       
-        self._shopping_entry = tk.Entry(self._shop_frame, textvariable=self._shopping)\
-            .pack(side=tk.RIGHT, pady=10, padx=10, expand=True, anchor=tk.W)       
-        self._transport_entry = tk.Entry(self._transp_frame, textvariable=self._transport)\
+            .pack(side=tk.RIGHT, pady=10, padx=10, expand=True, anchor=tk.W) 
+
+        self._shopping_entry = tk.Entry(self._shop_frame, \
+             textvariable=self._shopping)\
+            .pack(side=tk.RIGHT, pady=10, padx=10, expand=True, anchor=tk.W)
+
+        self._transport_entry = tk.Entry(self._transp_frame, \
+             textvariable=self._transport)\
             .pack(side=tk.RIGHT, pady=10, padx=10, expand=True, anchor=tk.W)
         return
 
@@ -177,18 +196,20 @@ class LogSpendings(Page):
     def _save_database(self): # save log into persistent storage
         """ Saves current data on self._database to pickle file"""
         with open('Expense_Tracker/expense_tracker.pickle', 'wb') as handle:
-            pickle.dump(self._database, handle, protocol=pickle.HIGHEST_PROTOCOL)
+            pickle.dump(self._database, handle, \
+                 protocol=pickle.HIGHEST_PROTOCOL)
         return
 
 
     def log_spending(self):
-        """ Retrieves entered spendings and logs the values into storage (self._database)."""
+        """ Retrieves entered spendings and logs the values into storage."""
         # get current month and date (this is the key)
         month = datetime.now().month
         year = datetime.now().year
         date = (month, year,)
 
-        # add date and/or category if not exists, else add to the current value stored in dict
+        # add date and/or category if not exists, else add to the current 
+        # value stored in dict
         for category in CATEGORIES:
             amount = getattr(self, "_" + category).get()
             if self._database.get(date) is not None:
@@ -226,7 +247,7 @@ class LogSpendings(Page):
 
 # need to use category names instead of numbers for the bar chart
 class CategoryGraphs(Page):
-    """ Page displaying current month's categorical spendings as a bar graph. """
+    """ Page displaying current month's categorical spendings as a bar graph."""
     def __init__(self, *args, **kwargs ):
         """ Constructor of an expense tracker"""
         Page.__init__(self, *args, **kwargs)
@@ -236,7 +257,8 @@ class CategoryGraphs(Page):
 
         self._init_graph()
 
-        update_graph_btn = tk.Button(self, text="Update Graph", command=self._update_graph)\
+        update_graph_btn = tk.Button(self, text="Update Graph", \
+             command=self._update_graph)\
             .pack(expand=True, pady=5, anchor=tk.S)
         return
 
@@ -247,7 +269,8 @@ class CategoryGraphs(Page):
         if self._database.get((month, year,)) is None:
             self._database[(month, year,)] = {}
         for category in CATEGORIES:
-            self._categ[category] = self._database.get((month, year,)).get(category, 0)
+            self._categ[category] = self._database.get((month, year,)) \
+                .get(category, 0)
 
         # update the data points for the bar graph
         self._data = []
@@ -275,11 +298,10 @@ class CategoryGraphs(Page):
         # create a bar graph and add it tkinter canvas to be packed.
         self._a.bar(self._rang, self._data, 0.5)
         self._canvas = FigureCanvasTkAgg(self._f, self)
-        self._canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self._canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, \
+             expand=True)
         return
 
-
-        
 
 class MonthlyGraphs(Page):
     """ Page displaying line graph of total spendings per month"""
@@ -293,12 +315,13 @@ class MonthlyGraphs(Page):
         self._months = []
         self._init_graph()
 
-        create_graph = tk.Button(self, text="Update Graph", command=self._update_graph)\
-            .pack(expand=True, pady=5, anchor=tk.S)
+        create_graph = tk.Button(self, text="Update Graph", \
+            command=self._update_graph).pack(expand=True, pady=5, anchor=tk.S)
         return
 
     def _init_graph(self):
-        """ Updates the graph values to the current data stored in the dictionary. """
+        """ Updates the graph values to the current data stored in the 
+        dictionary. """
         # create figure and add subplot
         self._f = Figure(figsize=(3,3), dpi=100)
         self._a = self._f.add_subplot(111)
@@ -307,7 +330,8 @@ class MonthlyGraphs(Page):
         self._a.plot(self._months, self._monthly_values, marker='o')
 
         self._canvas = FigureCanvasTkAgg(self._f, self)
-        self._canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        self._canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH,\
+             expand=True)
         return
     
     def _update_graph(self):
@@ -318,21 +342,23 @@ class MonthlyGraphs(Page):
         return
 
     def _update_plot_pts(self):
-        """ Retrieves current year's months and monthly spendings and stores them in lists."""
+        """ Retrieves current year's months and monthly spendings and 
+            stores them in lists.
+        """
         curr_year = datetime.now().year
         self._monthly_values = []
         self._months = []
 
         for i in range(1, 13):
             if self._database.get((i, curr_year,)) is not None:
-                self._monthly_values.append(sum(self._database.get((i, curr_year,)).values()))
+                self._monthly_values.append(sum( \
+                    self._database.get((i, curr_year,)).values()))
                 self._months.append(i)
         return
 
 
-
 class PieGraph(Page):
-    """ Page displaying pie chart of categorical spendings for the current month."""
+    """ Page displaying pie chart of categorical spendings for current month."""
     def __init__(self, *args, **kwargs ):
         """ Constructor """
         Page.__init__(self, *args, **kwargs)
@@ -350,12 +376,13 @@ class PieGraph(Page):
         canvas = FigureCanvasTkAgg(self._f, self)
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
-        create_graph = tk.Button(self, text="Update Chart", command=self._update_pie)\
+        create_graph = tk.Button(self, text="Update Chart", \
+             command=self._update_pie)\
             .pack(expand=True, pady=5, anchor=tk.S)
         return
 
     def _update_percentages(self):
-        """ updates percentages of categorical spendings for the current month."""
+        """ Updates percentages of categorical spendings for current month."""
         values = [self._database.get(category, 0) for category in CATEGORIES]
         total = sum(values)
         if total == 0:
@@ -370,17 +397,14 @@ class PieGraph(Page):
         self._a.pie(self._percentages)
         self._a.legend(CATEGORIES)
 
-    
-
-
 
 class Home(Page):
     """ Home page of application. """
     def __init__(self, *args, **kwargs ):
         """ Constructor """
         Page.__init__(self, *args, **kwargs)
-        welcome = tk.Label(self, text="Welcome to the Expense Tracker App!", font=12)\
-            .pack(side=tk.TOP, expand=True, fill=tk.BOTH)
+        welcome = tk.Label(self, text="Welcome to the Expense Tracker App!", \
+            font=12).pack(side=tk.TOP, expand=True, fill=tk.BOTH)
 
         load = Image.open("Expense_Tracker/Icons/analytics-icon.png")
         render = ImageTk.PhotoImage(load)
@@ -388,16 +412,15 @@ class Home(Page):
         img.image = render
         img.pack(side=tk.TOP, expand=True)
 
-        desc = tk.Label(self, text="Click on one of the buttons below to get started.")\
-            .pack(side=tk.TOP, expand=True, fill=tk.BOTH)
+        desc = tk.Label(self, \
+            text="Click on one of the buttons below to get started.") \
+                .pack(side=tk.TOP, expand=True, fill=tk.BOTH)
         return
 
 
-
-
 class MainView(tk.Frame):
-    """ Main view for user when application is run. Contains buttons that direct users to 
-    different pages of the application."""
+    """ Main view for user when application is run. Contains buttons that 
+    direct users to different pages of the application."""
 
     def __init__(self, *args, **kwargs):
         """ constructor """
@@ -434,23 +457,33 @@ class MainView(tk.Frame):
     def _place_pages(self):
         """ Place the 'pages' into the container."""
         # place each 'page'/frame into the container
-        self._home.place(in_=self._container, x=0, relwidth=1, relheight=1)
+        self._home.place(in_=self._container, x=0, relwidth=1, \
+            relheight=1)
         self._log.place(in_=self._container, x=0, y=0, relwidth=1, relheight=1)
-        self._category.place(in_=self._container, x=0, y=0, relwidth=1, relheight=1)
-        self._monthly.place(in_=self._container, x=0, y=0, relwidth=1, relheight=1)
+        self._category.place(in_=self._container, x=0, y=0, relwidth=1, \
+            relheight=1)
+        self._monthly.place(in_=self._container, x=0, y=0, relwidth=1, \
+            relheight=1)
         self._pie.place(in_=self._container, x=0, y=0, relwidth=1, relheight=1)
         return
 
     def _init_buttons(self):
         """ Initialise buttons to toggle to different pages."""
         # buttons to toggle to the different pages
-        self._log_btn = tk.Button(self, text="Log spendings", command=self._log.lift)\
-            .pack(side=tk.LEFT, padx=5, pady=5, expand=True)
+        self._log_btn = tk.Button(self, text="Log spendings", \
+            command=self._log.lift).pack(side=tk.LEFT, padx=5, pady=5, \
+                 expand=True)
+
         self._category_btn = tk.Button(self, text="View category spending", \
-            command=self._category.lift).pack(side=tk.LEFT, padx=5, pady=5, expand=True)
-        self._month_btn = tk.Button(self, text="View monthly spending", command=self._monthly.lift)\
+            command=self._category.lift).pack(side=tk.LEFT, padx=5, pady=5, \
+                expand=True)
+
+        self._month_btn = tk.Button(self, text="View monthly spending", \
+            command=self._monthly.lift)\
             .pack(side=tk.LEFT, padx=5, pady=5, expand=True)
-        self._pie_btn = tk.Button(self, text="View Pie Chart", command=self._pie.lift)\
+
+        self._pie_btn = tk.Button(self, text="View Pie Chart", \
+            command=self._pie.lift)\
             .pack(side=tk.LEFT, padx=5, pady=5, expand=True)
         return
     
