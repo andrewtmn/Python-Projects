@@ -26,20 +26,20 @@ from PIL import Image, ImageTk
 # Create a simple database to store expenditure based on categories 
 
 # {amount, category, date}
-#entry boxes/ option list for each
+# entry boxes/ option list for each
 
 # main functions:
 
 # - log spendings
 # - store spendings details in dictionary
-# - generate graphs and update them
+# - generate graphs and update them uppon command
 
 # storage of spendings needs to be external to the script, otherwise it just 
 # gets refreshed everytime the the app is started 
 # use pickle module to pickle a dictionary
 
 #strucutre of database:  (dict<tuple:dict>)
-# {(date):{'food':0, 'shopping':0, etc.}, ...}
+# i.e. {(date):{'food':0, 'shopping':0, etc.}, ...}
 
 CATEGORIES = ('food', 'entertainment', 'fitness', 'rent', 'transport', 
     'shopping')
@@ -396,6 +396,7 @@ class PieGraph(Page):
         self._a.clear
         self._a.pie(self._percentages)
         self._a.legend(CATEGORIES)
+        return
 
 
 class Home(Page):
