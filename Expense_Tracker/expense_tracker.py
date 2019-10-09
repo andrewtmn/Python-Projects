@@ -362,16 +362,19 @@ class PieGraph(Page):
     def __init__(self, *args, **kwargs ):
         """ Constructor """
         Page.__init__(self, *args, **kwargs)
-        label = tk.Label(self, text="Monthly Spendings based on Category",font=12)\
-            .pack(expand=True, anchor=tk.N, pady=8)
+        label = tk.Label(self, text="Monthly Spendings based on Category", \
+            font=12).pack(expand=True, anchor=tk.N, pady=8)
         
         self._percentages = []
         self._update_percentages()
 
         self._f = Figure(figsize=(3,3), dpi=100)
         self._a = self._f.add_subplot(111)
-        self._a.pie(self._percentages)
-        self._a.legend(CATEGORIES)
+        
+        # only display a pie chart if there have been spendings for the month
+        if len(self._percentages) != 0:
+            self._a.pie(self._percentages)
+            self._a.legend(CATEGORIES)
 
         canvas = FigureCanvasTkAgg(self._f, self)
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
@@ -383,10 +386,18 @@ class PieGraph(Page):
 
     def _update_percentages(self):
         """ Updates percentages of categorical spendings for current month."""
-        values = [self._database.get(category, 0) for category in CATEGORIES]
+        (month, year,) = (datetime.now().month, datetime.now().year,)
+        values = []
+        # get a list of the categorical spendings for the current month
+        for category in CATEGORIES:
+            values.append(self._database.get((month, year,), 0).get(category, 0))
+
         total = sum(values)
+        # if the total is 0, set the percentages list to be empty
         if total == 0:
+            self._percentages = 0
             return "you haven't spent any money this month!"
+        # otherwise, store the corresponding percentage for each category
         self._percentages = [value*100/total for value in values]
         return 
 

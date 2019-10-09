@@ -20,7 +20,7 @@
   TODO:
   - align the entry widgets to make them look pretty 
   - read about how to integrate matplotlib into tkinter - histograms and line graphs
-  - pie chart is not displaying
+  - pie chart isn't updating upon button press
   - add category names to the x-axis of the bar chart instead of numbers
   
 
