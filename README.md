@@ -19,9 +19,14 @@
  
   TODO:
   - align the entry widgets to make them look pretty 
-  - read about how to integrate matplotlib into tkinter - histograms and line graphs
-  - pie chart isn't updating upon button press
   - add category names to the x-axis of the bar chart instead of numbers
+  - pie chart legend overlaps the actual piechart
+
+  IMPROVEMENTS:
+  - instead of having an 'update graph' button, we could somehow allow the 
+    'Log Spendings' button to communicate with the other classes so that when
+    the monthly expenditure is updated, the graphs are automatically update
+  - could use better looking images to represent the buttons 
   
 
  

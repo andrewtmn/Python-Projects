@@ -46,6 +46,8 @@ CATEGORIES = ('food', 'entertainment', 'fitness', 'rent', 'transport',
 UPPER_CATEG = ('Food', 'Entertainment', 'Fitness', 'Rent', 'Transport',
      'Shopping')
 
+# The following classes form the model of the GUI
+
 class Page(tk.Frame):
     """ Class that represents a page in the expense tracker app. Pages can be
         toggled to be hidden and shown and only one page can be displayed in the
@@ -84,16 +86,22 @@ class LogSpendings(Page):
         self._init_headings()
         self._init_labels()
         self._init_entries()
-        button = tk.Button(self, text="print_data", \
-             command=self.print_data).pack(expand=True)
-        button2 = tk.Button(self, text="clear data", \
-            command=self.clear_database).pack(expand=True)
-        self._pack_frames()
+
+        # Debugging code here
+        # ----------------------------------------------
+        # button = tk.Button(self, text="print_data", \
+        #      command=self.print_data).pack(expand=True)
+        # button2 = tk.Button(self, text="clear data", \
+        #     command=self.clear_database).pack(expand=True)
+        # -------------------------------------------------
         
+        # pack all of the category frames into the page
+        self._pack_frames()
+
         # button to log entered spendings into the database
         self._log = tk.Button(self, text="Log Spendings", \
             command=self.log_spending)\
-            .pack(pady=5, padx=5, ipadx=8, side=tk.TOP)
+            .pack(pady=5, padx=5, ipadx=8, ipady=2, side=tk.TOP)
 
     def _init_vars(self):
         """ Initialise double variables for entry widgets"""
@@ -109,21 +117,21 @@ class LogSpendings(Page):
     def _init_frames(self):
         """ Initialise frames for each spending category"""
         # create containers for each category
-        self._food_frame = tk.Frame(self)
-        self._ent_frame = tk.Frame(self)
-        self._fitness_frame = tk.Frame(self)
-        self._rent_frame = tk.Frame(self)
-        self._shop_frame = tk.Frame(self)
-        self._transp_frame = tk.Frame(self)
+        self._food_frame = tk.Frame(self, background='white')
+        self._ent_frame = tk.Frame(self, background='white')
+        self._fitness_frame = tk.Frame(self, background='white')
+        self._rent_frame = tk.Frame(self, background='white')
+        self._shop_frame = tk.Frame(self, background='white')
+        self._transp_frame = tk.Frame(self, background='white')
         return
 
     def _init_headings(self):
         """ Initialise headings for the page"""
         # Headings for the app
-        self._heading = tk.Label(self, text="Expense Tracker", font=11)\
+        self._heading = tk.Label(self, text="Expense Tracker", font=11, background='white')\
             .pack(side=tk.TOP, expand=True)
         self._subheading = tk.Label(self, \
-            text="Enter your spendings and press 'Log Spendings'")\
+            text="Enter your spendings and press 'Log Spendings'", background='white')\
             .pack(side=tk.TOP, expand=True)
         return
     
@@ -140,57 +148,59 @@ class LogSpendings(Page):
 
     def _init_labels(self):
         """ Initialise labels for each category and pack"""
-        self._food_lbl = tk.Label(self._food_frame, text="Food")\
+        self._food_lbl = tk.Label(self._food_frame, text="Food", background='white')\
             .pack(side=tk.LEFT, ipadx=28, padx=5, expand=True, anchor=tk.E)
-        self._ent_lbl = tk.Label(self._ent_frame, text="Entertainment")\
+        self._ent_lbl = tk.Label(self._ent_frame, text="Entertainment", background='white')\
             .pack(side=tk.LEFT, ipadx=4, padx=5, expand=True, anchor=tk.E)
-        self._fitness_lbl = tk.Label(self._fitness_frame, text="Fitness")\
+        self._fitness_lbl = tk.Label(self._fitness_frame, text="Fitness", background='white')\
             .pack(side=tk.LEFT, ipadx=23, padx=5, expand=True, anchor=tk.E)
-        self._rent_lbl = tk.Label(self._rent_frame, text="Rent")\
+        self._rent_lbl = tk.Label(self._rent_frame, text="Rent", background='white')\
             .pack(side=tk.LEFT, ipadx=29, padx=5, expand=True, anchor=tk.E)
-        self._shop_lbl = tk.Label(self._shop_frame, text="Shopping")\
+        self._shop_lbl = tk.Label(self._shop_frame, text="Shopping", background='white')\
             .pack(side=tk.LEFT, ipadx=16, padx=5, expand=True, anchor=tk.E)
-        self._transp_lbl = tk.Label(self._transp_frame, text="Transport")\
+        self._transp_lbl = tk.Label(self._transp_frame, text="Transport", background='white')\
             .pack(side=tk.LEFT, ipadx=16, padx=5, expand=True, anchor=tk.E)
         return
 
     def _init_entries(self):
         """ Initialise entry widgets for each category and pack"""
-        self._food_entry = tk.Entry(self._food_frame, textvariable=self._food)\
+        self._food_entry = tk.Entry(self._food_frame, textvariable=self._food, \
+            background='white') \
             .pack(side=tk.RIGHT, pady=10, padx=10, expand=True, anchor=tk.W)
 
         self._entertainment_entry = tk.Entry(self._ent_frame, \
-             textvariable=self._entertainment)\
+             textvariable=self._entertainment, background='white')\
             .pack(side=tk.RIGHT, pady=10, padx=10, expand=True, anchor=tk.W)
 
         self._fitness_entry = tk.Entry(self._fitness_frame, \
-             textvariable=self._fitness)\
+             textvariable=self._fitness, background='white')\
             .pack(side=tk.RIGHT, pady=10, padx=10, expand=True, anchor=tk.W)  
 
-        self._rent_entry = tk.Entry(self._rent_frame, textvariable=self._rent)\
+        self._rent_entry = tk.Entry(self._rent_frame, textvariable=self._rent, \
+            background='white')\
             .pack(side=tk.RIGHT, pady=10, padx=10, expand=True, anchor=tk.W) 
 
         self._shopping_entry = tk.Entry(self._shop_frame, \
-             textvariable=self._shopping)\
+             textvariable=self._shopping, background='white')\
             .pack(side=tk.RIGHT, pady=10, padx=10, expand=True, anchor=tk.W)
 
         self._transport_entry = tk.Entry(self._transp_frame, \
-             textvariable=self._transport)\
+             textvariable=self._transport, background='white')\
             .pack(side=tk.RIGHT, pady=10, padx=10, expand=True, anchor=tk.W)
         return
 
 # ------------------------------ DEBUGGING ---------------
-    def print_data(self):
-        """ This method is for debugging purposes only."""
-        print(self._database.items())
-        print(self._database.keys())
-        print(self._database.values())
-        return
+    # def print_data(self):
+    #     """ This method is for debugging purposes only."""
+    #     print(self._database.items())
+    #     print(self._database.keys())
+    #     print(self._database.values())
+    #     return
 
-    def clear_database(self):
-        """Deletes all memory stored on database dictionary"""
-        self._database = {}
-        return
+    # def clear_database(self):
+    #     """Deletes all memory stored on database dictionary"""
+    #     self._database = {}
+    #     return
 # --------------------------------------------------------
     
     def _save_database(self): # save log into persistent storage
@@ -225,6 +235,7 @@ class LogSpendings(Page):
         print("Successfully saved log!")
         
         self._save_database()
+
         return
 
 
@@ -251,15 +262,13 @@ class CategoryGraphs(Page):
     def __init__(self, *args, **kwargs ):
         """ Constructor of an expense tracker"""
         Page.__init__(self, *args, **kwargs)
-        heading = tk.Label(self, text="Spending Based On Category", font=12)\
-            .pack(expand=True, anchor=tk.N, pady=8)
-        self._categ = {}
 
+        self._categ = {}
         self._init_graph()
 
         update_graph_btn = tk.Button(self, text="Update Graph", \
-             command=self._update_graph)\
-            .pack(expand=True, pady=5, anchor=tk.S)
+            command=self._update_graph)\
+            .pack(expand=True, pady=5, ipadx=1, ipady=2, anchor=tk.S)
         return
 
     def _update_category_values(self):
@@ -291,6 +300,7 @@ class CategoryGraphs(Page):
         # Create a figure and add a subplot to the figure
         self._f = Figure(figsize=(3, 3), dpi=100)
         self._a = self._f.add_subplot(111)
+        self._a.set_title("Categorical Spendings")
         self._rang = np.arange(1,7)
 
         self._update_category_values()
@@ -308,15 +318,14 @@ class MonthlyGraphs(Page):
     def __init__(self, *args, **kwargs ):
         """ Constructor """
         Page.__init__(self, *args, **kwargs)
-        label = tk.Label(self, text="Monthly Spendings (Histogram)", font=12)\
-            .pack(expand=True, anchor=tk.N, pady=8)
 
         self._monthly_values = []
         self._months = []
         self._init_graph()
 
         create_graph = tk.Button(self, text="Update Graph", \
-            command=self._update_graph).pack(expand=True, pady=5, anchor=tk.S)
+            command=self._update_graph)\
+                .pack(expand=True, pady=5, ipadx=1, ipady=2, anchor=tk.S)
         return
 
     def _init_graph(self):
@@ -325,6 +334,7 @@ class MonthlyGraphs(Page):
         # create figure and add subplot
         self._f = Figure(figsize=(3,3), dpi=100)
         self._a = self._f.add_subplot(111)
+        self._a.set_title("Monthly Spendings")
 
         self._update_plot_pts()
         self._a.plot(self._months, self._monthly_values, marker='o')
@@ -362,26 +372,25 @@ class PieGraph(Page):
     def __init__(self, *args, **kwargs ):
         """ Constructor """
         Page.__init__(self, *args, **kwargs)
-        label = tk.Label(self, text="Monthly Spendings based on Category", \
-            font=12).pack(expand=True, anchor=tk.N, pady=8)
         
         self._percentages = []
         self._update_percentages()
 
-        self._f = Figure(figsize=(3,3), dpi=100)
+        self._f = Figure(figsize=(4,4), dpi=100)
         self._a = self._f.add_subplot(111)
+        self._a.set_title("Categorical Spendings")
         
         # only display a pie chart if there have been spendings for the month
         if len(self._percentages) != 0:
             self._a.pie(self._percentages)
-            self._a.legend(CATEGORIES)
+            self._a.legend(CATEGORIES, loc="upper left")
 
         canvas = FigureCanvasTkAgg(self._f, self)
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
         create_graph = tk.Button(self, text="Update Chart", \
              command=self._update_pie)\
-            .pack(expand=True, pady=5, anchor=tk.S)
+            .pack(expand=True, pady=5, ipadx=1, ipady=2, anchor=tk.S)
         return
 
     def _update_percentages(self):
@@ -416,20 +425,25 @@ class Home(Page):
         """ Constructor """
         Page.__init__(self, *args, **kwargs)
         welcome = tk.Label(self, text="Welcome to the Expense Tracker App!", \
-            font=12).pack(side=tk.TOP, expand=True, fill=tk.BOTH)
+            font=12, background='white') \
+                .pack(side=tk.TOP, expand=True, fill=tk.BOTH)
 
+        # load an icon image for the home page
         load = Image.open("Expense_Tracker/Icons/analytics-icon.png")
         render = ImageTk.PhotoImage(load)
-        img = tk.Label(self, image=render)
+        img = tk.Label(self, image=render, background='white')
         img.image = render
         img.pack(side=tk.TOP, expand=True)
 
-        desc = tk.Label(self, \
-            text="Click on one of the buttons below to get started.") \
-                .pack(side=tk.TOP, expand=True, fill=tk.BOTH)
+        desc = tk.Label(self, text="Click on one of the buttons below to get started.",\
+             background='white').pack(side=tk.TOP, expand=True, fill=tk.BOTH)
         return
 
 
+
+
+
+# This is the View of the GUI
 class MainView(tk.Frame):
     """ Main view for user when application is run. Contains buttons that 
     direct users to different pages of the application."""
@@ -450,11 +464,11 @@ class MainView(tk.Frame):
     def _init_pages(self):
         """ Initialise 'pages' (tk.Frame) for the application """
         # create instances of the frames I want to toggle
-        self._home = Home(self)
-        self._log = LogSpendings(self)
-        self._category = CategoryGraphs(self)
-        self._monthly = MonthlyGraphs(self)
-        self._pie = PieGraph(self)
+        self._home = Home(self, background='white')
+        self._log = LogSpendings(self, background='white')
+        self._category = CategoryGraphs(self, background='white')
+        self._monthly = MonthlyGraphs(self, background='white')
+        self._pie = PieGraph(self, background='white')
         return
 
     def _init_containers(self):
@@ -482,30 +496,28 @@ class MainView(tk.Frame):
     def _init_buttons(self):
         """ Initialise buttons to toggle to different pages."""
         # buttons to toggle to the different pages
-        self._log_btn = tk.Button(self, text="Log spendings", \
-            command=self._log.lift).pack(side=tk.LEFT, padx=5, pady=5, \
-                 expand=True)
+        self._log_btn = tk.Button(self, text="Log Spendings", \
+            command=self._log.lift).pack(side=tk.LEFT, padx=10, pady=15, \
+                 ipady=2, ipadx=1, expand=True)
 
-        self._category_btn = tk.Button(self, text="View category spending", \
-            command=self._category.lift).pack(side=tk.LEFT, padx=5, pady=5, \
-                expand=True)
-
-        self._month_btn = tk.Button(self, text="View monthly spending", \
+        self._category_btn = tk.Button(self, text="Category Spending", \
+            command=self._category.lift).pack(side=tk.LEFT, padx=10, pady=15, \
+                ipady=2, ipadx=1, expand=True)
+        self._month_btn = tk.Button(self, text="Monthly Spending", \
             command=self._monthly.lift)\
-            .pack(side=tk.LEFT, padx=5, pady=5, expand=True)
+            .pack(side=tk.LEFT, padx=10, pady=15, ipady=2, ipadx=1, expand=True)
 
-        self._pie_btn = tk.Button(self, text="View Pie Chart", \
+        self._pie_btn = tk.Button(self, text="Category Pie Chart", \
             command=self._pie.lift)\
-            .pack(side=tk.LEFT, padx=5, pady=5, expand=True)
+            .pack(side=tk.LEFT, padx=10, pady=15, ipady=2, ipadx=1, expand=True)
         return
     
-
 
 def main():
     root = tk.Tk()
     root.title("Expense Tracker")
-    root.minsize(500,500)
-    expense_tracker=MainView(root)
+    root.minsize(550,550)
+    expense_tracker=MainView(root, background='white')
     expense_tracker.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
     root.mainloop()
 
