@@ -308,7 +308,7 @@ class CategoryGraphs(Page):
         # create a bar graph and add it tkinter canvas to be packed.
         self._a.bar(self._rang, self._data, 0.5)
         self._canvas = FigureCanvasTkAgg(self._f, self)
-        self._canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, \
+        self._canvas.get_tk_widget().pack(side=tk.TOP, ipady=20, fill=tk.BOTH, \
              expand=True)
         return
 
@@ -340,7 +340,7 @@ class MonthlyGraphs(Page):
         self._a.plot(self._months, self._monthly_values, marker='o')
 
         self._canvas = FigureCanvasTkAgg(self._f, self)
-        self._canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH,\
+        self._canvas.get_tk_widget().pack(side=tk.TOP, ipady=20, fill=tk.BOTH,\
              expand=True)
         return
     
@@ -386,7 +386,7 @@ class PieGraph(Page):
             self._a.legend(CATEGORIES, loc="upper left")
 
         canvas = FigureCanvasTkAgg(self._f, self)
-        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, ipady=20, expand=True)
 
         create_graph = tk.Button(self, text="Update Chart", \
              command=self._update_pie)\
