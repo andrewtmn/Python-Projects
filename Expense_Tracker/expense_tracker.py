@@ -397,14 +397,23 @@ class PieGraph(Page):
         """ Updates percentages of categorical spendings for current month."""
         (month, year,) = (datetime.now().month, datetime.now().year,)
         values = []
+        if self._database.get((month, year,), 0) == 0:
+            self._database[(month, year,)] = {}
+
         # get a list of the categorical spendings for the current month
         for category in CATEGORIES:
-            values.append(self._database.get((month, year,), 0).get(category, 0))
+            # add the expenditure for the category to the values list
+            expenditure = self._database.get((month, year,), 0).get(category, 0)
+            values.append(expenditure)
+            # create a dictionary for that month of the year if there isn't one
+            if expenditure == 0:
+                self._database[(month, year,)][category] = 0
+            
 
         total = sum(values)
-        # if the total is 0, set the percentages list to be empty
+        # if the total spendings is 0, set the percentages list to be empty
         if total == 0:
-            self._percentages = 0
+            self._percentages = [0,0,0,0,0,0,0]
             return "you haven't spent any money this month!"
         # otherwise, store the corresponding percentage for each category
         self._percentages = [value*100/total for value in values]
@@ -441,7 +450,9 @@ class Home(Page):
 
 
 
-
+# ----------------------------------------------------------------------------
+#                                  VIEW
+# ---------------------------------------------------------------------------
 
 # This is the View of the GUI
 class MainView(tk.Frame):
